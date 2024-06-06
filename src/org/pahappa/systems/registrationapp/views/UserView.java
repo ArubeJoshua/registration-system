@@ -1,6 +1,11 @@
 package org.pahappa.systems.registrationapp.views;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Scanner;
+import org.pahappa.systems.registrationapp.services.UserService;
+import org.pahappa.systems.registrationapp.models.User;
 
 public class UserView {
 
@@ -10,6 +15,8 @@ public class UserView {
         this.scanner = new Scanner(System.in);
     }
 
+    public static UserService userService = new UserService();
+    SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     public void displayMenu() {
         System.out.println("********* User Registration System *********");
@@ -60,20 +67,77 @@ public class UserView {
     }
 
     private void registerUser() {
+        System.out.println("Enter username: ");
+        String username = scanner.next();
+        System.out.println("Enter first name: ");
+        String first_name = scanner.next();
+        System.out.println("Enter last name: ");
+        String last_name = scanner.next();
+        System.out.println("Enter date of birth (dd-MM-yyyy): ");
+        String dateStr = scanner.next();
+        Date dob = userService.parseDate(dateStr);
+
+        if (userService.registerUser(username, first_name, last_name, dob)) {
+            System.out.println("User registered successfully.");
+        }
     }
 
     private void displayAllUsers() {
+        HashMap<String, User> users = userService.retrieveUsersList();
+        for (User user : users.values()) {
+
+            String formattedDob = outputFormat.format(user.getDateOfBirth());
+            System.out.println(user.getUsername() + ": " + user.getFirstname() + " " + user.getLastname() + ", DOB: " + formattedDob);
+
+        }
     }
 
     private void getUserOfUsername() {
+        System.out.println("Enter username: ");
+        String username = scanner.next();
+        User user = userService.retrieveUser(username);
+        if (user != null) {
+            System.out.println("Username: " + user.getUsername());
+            System.out.println("First Name: " + user.getFirstname());
+            System.out.println("Last Name: " + user.getLastname());
+            String formattedDob = outputFormat.format(user.getDateOfBirth());
+            System.out.println("Date of Birth: " + formattedDob);
+        } else {
+            System.out.println("User not found.");
+        }
     }
 
     private void updateUserOfUsername() {
+
+        // Prompt for new user details
+        System.out.println("Enter username: ");
+        String username = scanner.next();
+        System.out.println("Enter new username: ");
+        String newUsername = scanner.next();
+        System.out.println("Enter new first name: ");
+        String newFirstName = scanner.next();
+        System.out.println("Enter new last name: ");
+        String newLastName = scanner.next();
+        System.out.println("Enter new date of birth (dd-MM-yyyy): ");
+        String newDateStr = scanner.next();
+        Date newDob = userService.parseDate(newDateStr);
+
+        // Call the updateUser method with the provided details
+        userService.updateUser(username, newUsername, newFirstName, newLastName, newDob);
     }
 
     private void deleteUserOfUsername() {
+        System.out.println("Enter username: ");
+        String username = scanner.next();
+        if (userService.deleteUser(username)) {
+            System.out.println("User deleted successfully.");
+        } else {
+            System.out.println("User not found.");
+        }
     }
 
     private void deleteAllUsers() {
+        userService.deleteAllUsers();
+        System.out.println("User List successfully deleted");
     }
 }
