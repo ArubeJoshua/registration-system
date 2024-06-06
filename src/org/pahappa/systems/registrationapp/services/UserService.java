@@ -59,12 +59,19 @@ public class UserService {
         return users.get(username);
     }
 
-    public void updateUser(String username, String newUsername,String newFirstName, String newLastName, Date newDateOfBirth) {
+    public void updateUser(String username, String newUsername, String newFirstName, String newLastName, Date newDateOfBirth) {
         // Check if the user exists
         if (!users.containsKey(username)) {
             System.out.println("User not found.");
             return;
         }
+
+        // Check if the new username already exists
+        if (users.containsKey(newUsername)) {
+            System.out.println("Username already exists. Please choose a different one.");
+            return;
+        }
+
         // Retrieve the user
         User user = users.get(username);
 
