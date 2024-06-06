@@ -10,12 +10,12 @@ public class UserService {
     private static final String DATE_FORMAT = "dd-MM-yyyy";
     private final HashMap<String, User> users = new HashMap<>();
 
-    public boolean registerUser(String username, String firstName, String lastName, Date dob) {
+    public boolean registerUser(String username, String firstName, String lastName, Date dateOfBirth) {
         User newUser = new User();
         newUser.setUsername(username);
         newUser.setFirstname(firstName);
         newUser.setLastname(lastName);
-        newUser.setDateOfBirth(dob);
+        newUser.setDateOfBirth(dateOfBirth);
 
         if (users.containsKey(username)) {
             System.out.println("This username is already taken. Please try again.");
@@ -48,7 +48,7 @@ public class UserService {
         return users.get(username);
     }
 
-    public void updateUser(String username ,String newFirstName, String newLastName, Date newDob) {
+    public void updateUser(String username ,String newFirstName, String newLastName, Date newDateOfBirth) {
         // Check if the user exists
         if (!users.containsKey(username)) {
             System.out.println("User not found.");
@@ -61,7 +61,7 @@ public class UserService {
         user.setUsername(username);
         user.setFirstname(newFirstName);
         user.setLastname(newLastName);
-        user.setDateOfBirth(newDob);
+        user.setDateOfBirth(newDateOfBirth);
     }
 
     public boolean deleteUser(String username) {
