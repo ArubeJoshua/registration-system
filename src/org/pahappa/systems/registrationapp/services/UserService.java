@@ -14,13 +14,6 @@ public class UserService {
 
         User newUser = new User();
 
-        // Validate username, firstName, and lastName for regular text (only alphabets)
-        String regularTextPattern = "^[a-zA-Z]+$";
-        if ( !firstName.matches(regularTextPattern) || !lastName.matches(regularTextPattern)) {
-            System.out.println("first name and last name should contain only alphabetic characters.");
-            return false;
-        }
-
         newUser.setUsername(username);
         newUser.setFirstname(firstName);
         newUser.setLastname(lastName);
@@ -35,19 +28,36 @@ public class UserService {
         return true;
     }
 
-    // Method to parse a date string into a Date object
     public Date parseDate(String dateString) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-        Date date = null;
-        try {
-            date = dateFormat.parse(dateString);
-        } catch (ParseException e) {
-            System.out.println("Invalid date format. Please enter the date in dd-MM-yyyy format.");
+        if (dateString.isEmpty()) {
+            System.out.println("Date cannot be empty.");
+            return null;
         }
-        return date;
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        dateFormat.setLenient(false); //Strict restrictions to the date format
+
+        try {
+            Date date = dateFormat.parse(dateString);
+            // Get today's date
+            Date today = new Date();
+
+            // Ensure the date is not in the future
+            if (date.after(today)) {
+                System.out.println("Date of birth cannot be in the future.");
+                return null;
+            }
+            return date;
+
+        } catch (ParseException e) {
+            System.out.println("Invalid date!!!!!");
+            return null;
+        }
     }
 
-    public HashMap<String, User> retrieveUsersList() {
+
+
+        public HashMap<String, User> retrieveUsersList() {
         if (users.isEmpty()) {
             System.out.println("No users registered.");
         }
@@ -92,6 +102,46 @@ public class UserService {
 
     public void deleteAllUsers() {
         users.clear();
+    }
+
+    public boolean checkUsername(String username) {
+        if (username.isEmpty()) {
+            System.out.println("Username cannot be empty!");
+            return true;
+        }
+        if (username.length() < 4) {
+            System.out.println("Username should be atleast 4 characters");
+            return true;
+        }
+        if (users.containsKey(username)) {
+            System.out.println("Username already exists. Please choose a different one.");
+            return true;
+        }
+        if (!username.matches("^[a-zA-Z0-9_]+$")){
+            System.out.println("Username must only contain alphanumeric characters and underscores");
+            return true;
+        }
+
+        return false;
+    }
+
+
+    public boolean checkname(String name) {
+
+        String regularTextPattern = "^[a-zA-Z]+$";
+        if(name.isEmpty()){
+            System.out.println("Name cannot be empty!");
+            return true;
+        }   // Validate firstName, and lastName for regular text (only alphabets)
+        if (!name.matches(regularTextPattern)) {
+            System.out.println("first name and last name should contain only alphabetic characters.");
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkDate(Date date) {
+        return date == null;
     }
 
 }

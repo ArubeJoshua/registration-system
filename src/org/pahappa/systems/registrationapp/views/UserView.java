@@ -67,17 +67,21 @@ public class UserView {
     }
 
     private void registerUser() {
-        System.out.println("Enter username: ");
-        String username = scanner.next();
-        System.out.println("Enter first name: ");
-        String first_name = scanner.next();
-        System.out.println("Enter last name: ");
-        String last_name = scanner.next();
-        System.out.println("Enter date of birth (dd-MM-yyyy): ");
-        String dateStr = scanner.next();
-        Date dob = userService.parseDate(dateStr);
+        String username;
+        String first_name;
+        String last_name;
+        Date dateOfBirth;
+        do {System.out.println("Enter username: ");
+             username = scanner.nextLine(); }while(userService.checkUsername(username));
+        do {System.out.println("Enter first name: ");
+             first_name = scanner.nextLine(); }while(userService.checkname(first_name));
+        do {System.out.println("Enter last name: ");
+             last_name = scanner.nextLine(); }while(userService.checkname(last_name));
+        do {System.out.println("Enter date of birth (dd-MM-yyyy): ");
+            String dateStr = scanner.nextLine();
+            dateOfBirth = userService.parseDate(dateStr); }while(userService.checkDate(dateOfBirth));
 
-        if (userService.registerUser(username, first_name, last_name, dob)) {
+        if (userService.registerUser(username, first_name, last_name, dateOfBirth)) {
             System.out.println("User registered successfully.");
         }
     }
