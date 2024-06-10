@@ -104,8 +104,13 @@ public class UserView {
     }
 
     private void getUserOfUsername() {
-        System.out.println("Enter username: ");
-        String username = scanner.next();
+        String username;
+        do{
+            System.out.println("Enter valid username: ");
+            username = scanner.nextLine();
+        if (username.equalsIgnoreCase("menu")) displayMenu();
+        } while(username.isEmpty());
+
         User user = userService.retrieveUser(username);
         if (user != null) {
             System.out.println("Username: " + user.getUsername());
