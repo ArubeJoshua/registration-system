@@ -72,13 +72,20 @@ public class UserView {
         String last_name;
         Date dateOfBirth;
         do {System.out.println("Enter username: ");
-             username = scanner.nextLine(); }while(userService.checkUsername(username));
+             username = scanner.nextLine();
+             if (username.equalsIgnoreCase("menu")) displayMenu();
+        }while(userService.checkUsername(username));
         do {System.out.println("Enter first name: ");
-             first_name = scanner.nextLine(); }while(userService.checkname(first_name));
+             first_name = scanner.nextLine();
+             if (first_name.equalsIgnoreCase("menu")) displayMenu();
+        }while(userService.checkname(first_name));
         do {System.out.println("Enter last name: ");
-             last_name = scanner.nextLine(); }while(userService.checkname(last_name));
+             last_name = scanner.nextLine();
+            if (last_name.equalsIgnoreCase("menu")) displayMenu();
+        }while(userService.checkname(last_name));
         do {System.out.println("Enter date of birth (dd-MM-yyyy): ");
             String dateStr = scanner.nextLine();
+            if (dateStr.equalsIgnoreCase("menu")) displayMenu();
             dateOfBirth = userService.parseDate(dateStr); }while(userService.checkDate(dateOfBirth));
 
         if (userService.registerUser(username, first_name, last_name, dateOfBirth)) {
@@ -112,22 +119,38 @@ public class UserView {
     }
 
     private void updateUserOfUsername() {
+        String username;
+        String newUsername;
+        String newFirstName;
+        String newLastName;
+        Date newDateOfBirth;
 
         // Prompt for new user details
-        System.out.println("Enter username: ");
-        String username = scanner.next();
-        System.out.println("Enter new username: ");
-        String newUsername = scanner.next();
-        System.out.println("Enter new first name: ");
-        String newFirstName = scanner.next();
-        System.out.println("Enter new last name: ");
-        String newLastName = scanner.next();
-        System.out.println("Enter new date of birth (dd-MM-yyyy): ");
-        String newDateStr = scanner.next();
-        Date newDob = userService.parseDate(newDateStr);
+        do {System.out.println("Enter username: ");
+            username = scanner.nextLine();
+            if(username.equalsIgnoreCase("menu")) displayMenu();
+        }while(userService.searchUsername(username));
+        do {System.out.println("Enter new username: ");
+            newUsername = scanner.nextLine();
+            if(newUsername.equalsIgnoreCase("menu")) displayMenu();
+        }while(userService.checkUsername(newUsername));
+        do {System.out.println("Enter new first name: ");
+            newFirstName = scanner.nextLine();
+            if(newFirstName.equalsIgnoreCase("menu")) displayMenu();
+        }while(userService.checkname(newFirstName));
+        do {System.out.println("Enter new last name: ");
+            newLastName = scanner.nextLine();
+            if(newLastName.equalsIgnoreCase("menu")) displayMenu();
+        }while(userService.checkname(newLastName));
+        do {System.out.println("Enter new date of birth (dd-MM-yyyy): ");
+            String dateStr = scanner.nextLine();
+            if(dateStr.equalsIgnoreCase("menu")) displayMenu();
+            newDateOfBirth = userService.parseDate(dateStr); }while(userService.checkDate(newDateOfBirth));
+
+
 
         // Call the updateUser method with the provided details
-        userService.updateUser(username, newUsername, newFirstName, newLastName, newDob);
+        userService.updateUser(username, newUsername, newFirstName, newLastName, newDateOfBirth);
     }
 
     private void deleteUserOfUsername() {
@@ -141,7 +164,12 @@ public class UserView {
     }
 
     private void deleteAllUsers() {
-        userService.deleteAllUsers();
-        System.out.println("User List successfully deleted");
+        if (userService.deleteAllUsers()) {
+            System.out.println("User List successfully deleted");
+        } else {
+            System.out.println("Users not found.");
+        }
     }
+
+
 }

@@ -69,18 +69,16 @@ public class UserService {
         return users.get(username);
     }
 
-    public void updateUser(String username, String newUsername, String newFirstName, String newLastName, Date newDateOfBirth) {
+    public boolean searchUsername(String username){
         // Check if the user exists
         if (!users.containsKey(username)) {
             System.out.println("User not found.");
-            return;
+            return true;
         }
+        return false;
+    }
 
-        // Check if the new username already exists
-        if (users.containsKey(newUsername)) {
-            System.out.println("Username already exists. Please choose a different one.");
-            return;
-        }
+    public void updateUser(String username, String newUsername, String newFirstName, String newLastName, Date newDateOfBirth) {
 
         // Retrieve the user
         User user = users.get(username);
@@ -100,8 +98,12 @@ public class UserService {
         return false;
     }
 
-    public void deleteAllUsers() {
-        users.clear();
+    public boolean deleteAllUsers() {
+        if (!users.isEmpty()){
+            users.clear();
+            return true;
+        }
+        return false;
     }
 
     public boolean checkUsername(String username) {
@@ -110,7 +112,7 @@ public class UserService {
             return true;
         }
         if (username.length() < 4) {
-            System.out.println("Username should be atleast 4 characters");
+            System.out.println("Username should be at least 4 characters");
             return true;
         }
         if (users.containsKey(username)) {
