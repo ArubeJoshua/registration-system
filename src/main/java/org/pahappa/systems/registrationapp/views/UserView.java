@@ -3,6 +3,7 @@ package org.pahappa.systems.registrationapp.views;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import org.pahappa.systems.registrationapp.services.UserService;
 import org.pahappa.systems.registrationapp.models.User;
@@ -94,12 +95,10 @@ public class UserView {
     }
 
     private void displayAllUsers() {
-        HashMap<String, User> users = userService.retrieveUsersList();
-        for (User user : users.values()) {
-
+        List<User> users = userService.retrieveUsersList();
+        for (User user : users) {
             String formattedDob = outputFormat.format(user.getDateOfBirth());
             System.out.println(user.getUsername() + ": " + user.getFirstname() + " " + user.getLastname() + ", DOB: " + formattedDob);
-
         }
     }
 

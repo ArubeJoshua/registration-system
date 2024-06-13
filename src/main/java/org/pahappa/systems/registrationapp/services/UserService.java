@@ -1,16 +1,23 @@
 package org.pahappa.systems.registrationapp.services;
-import org.pahappa.systems.registrationapp.models.User;
 
+import org.pahappa.systems.registrationapp.models.User;
+import org.pahappa.systems.registrationapp.dao.UserDAO;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
+
 
 public class UserService {
     private static final String DATE_FORMAT = "dd-MM-yyyy";
-    private final HashMap<String, User> users = new HashMap<>();
+    private final UserDAO userDAO;
+    private User currentUser;
 
-    public boolean registerUser(String username, String firstName, String lastName, Date dateOfBirth) {
+    public UserService() {
+        userDAO = new UserDAO();
+    }
+
+    public boolean registerUser (String username, String firstName, String lastName, Date dateOfBirth) {
 
         User newUser = new User();
 
@@ -19,12 +26,7 @@ public class UserService {
         newUser.setLastname(lastName);
         newUser.setDateOfBirth(dateOfBirth);
 
-        if (users.containsKey(username) || users.values().stream().anyMatch(user -> user.equals(newUser))) {
-            System.out.println("This username is already taken or a user with the same details already exists. Please try again.");
-            return false;
-        }
-
-        users.put(username, newUser);
+        userDAO.save(newUser);
         return true;
     }
 
@@ -57,50 +59,50 @@ public class UserService {
 
 
 
-        public HashMap<String, User> retrieveUsersList() {
-        if (users.isEmpty()) {
+    public List<User> retrieveUsersList() {
+        List<User> allUsers = userDAO.getAllUsers();
+        if (allUsers.isEmpty()) {
             System.out.println("No users registered.");
         }
-        return users;
+        return allUsers;
 
     }
 
     public User retrieveUser(String username) {
-        return users.get(username);
+        currentUser = userDAO.getUserByUsername(username);
+        return currentUser;
     }
 
     public boolean searchUsername(String username){
         // Check if the user exists
-        if (!users.containsKey(username)) {
+        if (!userDAO.isUsernameExists(username)) {
             System.out.println("User not found.");
             return true;
         }
         return false;
     }
 
-    public void updateUser(String username, String newUsername, String newFirstName, String newLastName, Date newDateOfBirth) {
+    public void updateUser(String oldUsername, String newUsername, String newFirstName, String newLastName, Date newDateOfBirth) {
+        currentUser.setUsername(newUsername);
+        currentUser.setFirstname(newFirstName);
+        currentUser.setLastname(newLastName);
+        currentUser.setDateOfBirth(newDateOfBirth);
 
-        // Retrieve the user
-        User user = users.get(username);
+        userDAO.update(currentUser, oldUsername);
 
-        // Update the user's details
-        user.setUsername(newUsername);
-        user.setFirstname(newFirstName);
-        user.setLastname(newLastName);
-        user.setDateOfBirth(newDateOfBirth);
     }
 
     public boolean deleteUser(String username) {
-        if (users.containsKey(username)) {
-            users.remove(username);
+        if (userDAO.isUsernameExists(username)) {
+            userDAO.deleteUser(username);
             return true;
         }
         return false;
     }
 
     public boolean deleteAllUsers() {
-        if (!users.isEmpty()){
-            users.clear();
+        if (userDAO.containUsers()){
+            userDAO.deleteAllUsers();
             return true;
         }
         return false;
@@ -115,7 +117,7 @@ public class UserService {
             System.out.println("Username should be at least 4 characters");
             return true;
         }
-        if (users.containsKey(username)) {
+        if (userDAO.isUsernameExists(username)) {
             System.out.println("Username already exists. Please choose a different one.");
             return true;
         }
