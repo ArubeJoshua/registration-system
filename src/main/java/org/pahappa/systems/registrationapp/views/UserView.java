@@ -2,7 +2,6 @@ package org.pahappa.systems.registrationapp.views;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -69,7 +68,7 @@ public class UserView {
         }
     }
 
-    private void registerUser() throws MissingAttributeException {
+    private void registerUser()  {
         String username;
         String first_name;
         String last_name;
