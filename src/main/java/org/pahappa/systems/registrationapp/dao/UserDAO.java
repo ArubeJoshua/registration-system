@@ -26,7 +26,7 @@ public class UserDAO {
             session.clear();
             return count > 0; // If count > 0, username exists; otherwise, it does not
 
-        } catch (HibernateException e) {
+        } catch (Exception e) {
             e.printStackTrace(); // Handle or log the exception
             return false;
         } finally {
@@ -83,7 +83,7 @@ public class UserDAO {
             }
             session.clear();
 
-        } catch (HibernateException e) {
+        } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -137,7 +137,7 @@ public class UserDAO {
 
             System.out.println(rowsDeleted + " user(s) deleted successfully.");
             session.clear();
-        } catch (HibernateException e) {
+        } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -157,7 +157,7 @@ public class UserDAO {
             Criteria criteria = session.createCriteria(User.class);
             session.clear();
             return criteria.list();
-        } catch (HibernateException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         } finally {
@@ -175,7 +175,7 @@ public class UserDAO {
             criteria.add(Restrictions.eq("username", username));
             session.clear();
             return (User) criteria.uniqueResult();
-        } catch (HibernateException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         } finally {
@@ -197,7 +197,7 @@ public class UserDAO {
             session.clear();
 
             return count > 0; // Return true if there are users in the database
-        } catch (HibernateException e) {
+        } catch (Exception e) {
             e.printStackTrace(); // Handle or log the exception appropriately
             return false;
         } finally {
