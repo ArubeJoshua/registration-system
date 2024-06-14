@@ -176,12 +176,23 @@ public class UserView {
     }
 
     private void deleteAllUsers() {
-        if (userService.deleteAllUsers()) {
-            System.out.println("User List successfully deleted");
+        System.out.println("Are you sure you want to delete all users? (Y/N)");
+        String input = scanner.nextLine().trim().toLowerCase();
+
+        if (input.equals("y")) {
+            if (userService.deleteAllUsers()) {
+                System.out.println("User list successfully deleted.");
+            } else {
+                System.out.println("No Users found.");
+            }
+        } else if (input.equals("n")) {
+            System.out.println("Operation cancelled.");
         } else {
-            System.out.println("Users not found.");
+            System.out.println("Invalid input. Please enter Y or N.");
+            deleteAllUsers(); // Recursive call to handle invalid input
         }
     }
+
 
 
 }

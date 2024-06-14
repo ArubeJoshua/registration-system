@@ -18,16 +18,16 @@ public class UserService {
         userDAO = new UserDAO();
     }
 
-    public boolean registerUser(User user) throws MissingAttributeException {
-        try {
+    public boolean registerUser(User user)  {
 
-
+        try{
             User newUser = new User();
             newUser.setUsername(user.getUsername());
             newUser.setFirstname(user.getFirstname());
             newUser.setLastname(user.getLastname());
             newUser.setDateOfBirth(user.getDateOfBirth());
             validateUserAttributes(newUser);
+
 
             userDAO.save(newUser); // Save the user
             return true; // Return true if registration succeeds
