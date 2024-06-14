@@ -1,32 +1,47 @@
 package org.pahappa.systems.registrationapp.services;
-import org.pahappa.systems.registrationapp.models.User;
 
+import org.pahappa.systems.registrationapp.exception.MissingAttributeException;
+import org.pahappa.systems.registrationapp.models.User;
+import org.pahappa.systems.registrationapp.dao.UserDAO;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
+
 
 public class UserService {
     private static final String DATE_FORMAT = "dd-MM-yyyy";
-    private final HashMap<String, User> users = new HashMap<>();
+    private final UserDAO userDAO;
+    private User currentUser;
 
-    public boolean registerUser(String username, String firstName, String lastName, Date dateOfBirth) {
+    public UserService() {
+        userDAO = new UserDAO();
+    }
 
-        User newUser = new User();
+    public boolean registerUser(User user) throws MissingAttributeException {
+        try {
 
-        newUser.setUsername(username);
-        newUser.setFirstname(firstName);
-        newUser.setLastname(lastName);
-        newUser.setDateOfBirth(dateOfBirth);
 
-        if (users.containsKey(username) || users.values().stream().anyMatch(user -> user.equals(newUser))) {
-            System.out.println("This username is already taken or a user with the same details already exists. Please try again.");
+            User newUser = new User();
+            newUser.setUsername(user.getUsername());
+            newUser.setFirstname(user.getFirstname());
+            newUser.setLastname(user.getLastname());
+            newUser.setDateOfBirth(user.getDateOfBirth());
+            validateUserAttributes(newUser);
+
+            userDAO.save(newUser); // Save the user
+            return true; // Return true if registration succeeds
+        } catch (MissingAttributeException e) {
+            // Handle the missing attribute exception
+            System.out.println("Registration failed: " + e.getMessage());
+            return false; // Return false indicating registration failure
+        } catch (Exception e) {
+            // Handle other exceptions (e.g., database error)
+            System.out.println("Registration failed due to an unexpected error.");
             return false;
         }
-
-        users.put(username, newUser);
-        return true;
     }
+
 
     public Date parseDate(String dateString) {
         if (dateString.isEmpty()) {
@@ -57,56 +72,56 @@ public class UserService {
 
 
 
-        public HashMap<String, User> retrieveUsersList() {
-        if (users.isEmpty()) {
+    public List<User> retrieveUsersList() {
+        List<User> allUsers = userDAO.getAllUsers();
+        if (allUsers.isEmpty()) {
             System.out.println("No users registered.");
         }
-        return users;
+        return allUsers;
 
     }
 
     public User retrieveUser(String username) {
-        return users.get(username);
+        currentUser = userDAO.getUserByUsername(username);
+        return currentUser;
     }
 
     public boolean searchUsername(String username){
         // Check if the user exists
-        if (!users.containsKey(username)) {
+        if (!userDAO.isUsernameExists(username)) {
             System.out.println("User not found.");
             return true;
         }
         return false;
     }
 
-    public void updateUser(String username, String newUsername, String newFirstName, String newLastName, Date newDateOfBirth) {
+    public void updateUser(String oldUsername, String newUsername, String newFirstName, String newLastName, Date newDateOfBirth) {
+        currentUser.setUsername(newUsername);
+        currentUser.setFirstname(newFirstName);
+        currentUser.setLastname(newLastName);
+        currentUser.setDateOfBirth(newDateOfBirth);
 
-        // Retrieve the user
-        User user = users.get(username);
+        userDAO.update(currentUser, oldUsername);
 
-        // Update the user's details
-        user.setUsername(newUsername);
-        user.setFirstname(newFirstName);
-        user.setLastname(newLastName);
-        user.setDateOfBirth(newDateOfBirth);
     }
 
     public boolean deleteUser(String username) {
-        if (users.containsKey(username)) {
-            users.remove(username);
+        if (userDAO.isUsernameExists(username)) {
+            userDAO.deleteUser(username);
             return true;
         }
         return false;
     }
 
     public boolean deleteAllUsers() {
-        if (!users.isEmpty()){
-            users.clear();
+        if (userDAO.containUsers()){
+            userDAO.deleteAllUsers();
             return true;
         }
         return false;
     }
 
-    public boolean checkUsername(String username) {
+    public boolean checkUsername (String username) {
         if (username.isEmpty()) {
             System.out.println("Username cannot be empty!");
             return true;
@@ -115,7 +130,7 @@ public class UserService {
             System.out.println("Username should be at least 4 characters");
             return true;
         }
-        if (users.containsKey(username)) {
+        if (userDAO.isUsernameExists(username)) {
             System.out.println("Username already exists. Please choose a different one.");
             return true;
         }
@@ -144,6 +159,21 @@ public class UserService {
 
     public boolean checkDate(Date date) {
         return date == null;
+    }
+
+    private void validateUserAttributes(User user) throws MissingAttributeException {
+        if (user.getUsername().isEmpty()) {
+            throw new MissingAttributeException("Username is required.");
+        }
+        if (user.getFirstname().isEmpty()) {
+            throw new MissingAttributeException("First name is required.");
+        }
+        if (user.getLastname().isEmpty()) {
+            throw new MissingAttributeException("Last name is required.");
+        }
+        if (user.getDateOfBirth() == null) {
+            throw new MissingAttributeException("Date of birth is required.");
+        }
     }
 
 }

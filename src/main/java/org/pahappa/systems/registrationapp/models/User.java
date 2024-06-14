@@ -1,18 +1,31 @@
 package org.pahappa.systems.registrationapp.models;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
+@Entity
+@Table(name = "user")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
+    private long id;
+
+    @Column(name = "user_name")
     private String username;
+
+    @Column(name = "first_name")
     private String firstname;
+
+    @Column(name = "last_name")
     private String lastname;
+
+    @Column(name = "date_of_birth")
     private Date dateOfBirth;
 
-    public User(){
-
-    }
+    public User(){    }
 
     private User(String username, String firstname, String lastname, Date dateOfBirth){
         this.username = username;
@@ -55,7 +68,13 @@ public class User {
 
     @Override
     public String toString() {
-        return username;
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                '}';
     }
 
     @Override

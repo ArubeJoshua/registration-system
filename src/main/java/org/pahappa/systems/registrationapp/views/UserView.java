@@ -3,7 +3,10 @@ package org.pahappa.systems.registrationapp.views;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
+
+import org.pahappa.systems.registrationapp.exception.MissingAttributeException;
 import org.pahappa.systems.registrationapp.services.UserService;
 import org.pahappa.systems.registrationapp.models.User;
 
@@ -66,21 +69,21 @@ public class UserView {
         }
     }
 
-    private void registerUser() {
+    private void registerUser() throws MissingAttributeException {
         String username;
         String first_name;
         String last_name;
         Date dateOfBirth;
         do {System.out.println("Enter username: ");
-             username = scanner.nextLine();
-             if (username.equalsIgnoreCase("menu")) displayMenu();
+            username = scanner.nextLine();
+            if (username.equalsIgnoreCase("menu")) displayMenu();
         }while(userService.checkUsername(username));
         do {System.out.println("Enter first name: ");
-             first_name = scanner.nextLine();
-             if (first_name.equalsIgnoreCase("menu")) displayMenu();
+            first_name = scanner.nextLine();
+            if (first_name.equalsIgnoreCase("menu")) displayMenu();
         }while(userService.checkname(first_name));
         do {System.out.println("Enter last name: ");
-             last_name = scanner.nextLine();
+            last_name = scanner.nextLine();
             if (last_name.equalsIgnoreCase("menu")) displayMenu();
         }while(userService.checkname(last_name));
         do {System.out.println("Enter date of birth (dd-MM-yyyy): ");
@@ -88,18 +91,22 @@ public class UserView {
             if (dateStr.equalsIgnoreCase("menu")) displayMenu();
             dateOfBirth = userService.parseDate(dateStr); }while(userService.checkDate(dateOfBirth));
 
-        if (userService.registerUser(username, first_name, last_name, dateOfBirth)) {
+        User user = new User();
+        user.setUsername(username);
+        user.setFirstname(first_name);
+        user.setLastname(last_name);
+        user.setDateOfBirth(dateOfBirth);
+
+        if (userService.registerUser(user)) {
             System.out.println("User registered successfully.");
         }
     }
 
     private void displayAllUsers() {
-        HashMap<String, User> users = userService.retrieveUsersList();
-        for (User user : users.values()) {
-
+        List<User> users = userService.retrieveUsersList();
+        for (User user : users) {
             String formattedDob = outputFormat.format(user.getDateOfBirth());
             System.out.println(user.getUsername() + ": " + user.getFirstname() + " " + user.getLastname() + ", DOB: " + formattedDob);
-
         }
     }
 
@@ -108,7 +115,7 @@ public class UserView {
         do{
             System.out.println("Enter valid username: ");
             username = scanner.nextLine();
-        if (username.equalsIgnoreCase("menu")) displayMenu();
+            if (username.equalsIgnoreCase("menu")) displayMenu();
         } while(username.isEmpty());
 
         User user = userService.retrieveUser(username);
