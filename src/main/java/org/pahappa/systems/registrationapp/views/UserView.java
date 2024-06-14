@@ -4,8 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-
-import org.pahappa.systems.registrationapp.exception.MissingAttributeException;
 import org.pahappa.systems.registrationapp.services.UserService;
 import org.pahappa.systems.registrationapp.models.User;
 
