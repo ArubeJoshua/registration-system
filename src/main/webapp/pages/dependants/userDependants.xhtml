@@ -1,0 +1,272 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template/pageTemplate.xhtml">
+
+    <ui:define name="content">
+        <h:head>
+            <ui:define name="pageTitle">Register Dependant</ui:define>
+            <style>
+                body, h1, h2, h3, h4, h5, h6, p, ul, ol, li, div {
+                    margin: 0;
+                    padding: 0;
+                    border: 0;
+                    font: inherit;
+                    vertical-align: baseline;
+
+                }
+
+                /* Set some basic styles for the body */
+                body {
+                    line-height: 1 !important;
+                    font-family: Arial, sans-serif !important;
+                    display: block !important;
+                    min-height: 100vh !important;
+                    background-color: #b1ccfe12 !important;
+                    color: #494848 !important;
+                }
+
+                .mainbody {
+                    margin: 4rem 7rem;
+                }
+
+                .back {
+                    position: absolute;
+                }
+
+                h1 {
+                    font-size: 2em;
+                    padding: .3em;
+                }
+
+                h2 {
+                    font-size: 1.5em;
+                    padding: .3em;
+                }
+
+                h3 {
+                    padding: .3em;
+                }
+
+                /* Style paragraphs */
+                p {
+                    margin-bottom: 1em;
+                    line-height: 1.5;
+                }
+
+                .title {
+                    padding: .3em;
+                    color: #a0a0cc ;
+                }
+
+                body .ui-datatable thead th td {
+                    padding: .6rem .6rem !important;
+                }
+
+                body .ui-datatable thead th .ui-column-title {
+                    color: #a0a0cc  !important;
+                    font-family: Arial, sans-serif !important;
+                }
+
+                .actns {
+                    padding: 2rem;
+                    border-radius: 12px;
+                    width: 35rem;
+                    margin-top: 2rem;
+                }
+
+
+                #searchForm {
+                    width: 1230px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 1rem;
+                }
+
+                #actionPad {
+                    width: 1230px;
+                    background-color: #ffffff !important;
+                    margin-top: 1rem;
+                    padding-bottom: .5rem;
+                    padding-top: .5rem;
+                    padding-left: 2rem;
+                }
+
+                .profile {
+                    padding: 1rem;
+                    border-radius: 12px;
+                    width: 35rem;
+                }
+
+                .top-p-a {
+                    display: inline-flex;
+                    justify-content: space-between;
+                    width: 1230px;
+                    background: white;
+                }
+
+                form#dependantForm {
+                    width: 1230px;
+                }
+
+                input#searchForm\:search {
+                    width: 940px !important;
+                }
+
+                button#dependantsForm\:j_idt17 {
+                    margin-left: 3rem;
+                }
+
+                #dependantForm .ui-button {
+                    background: white !important;
+                    border: none !important;
+                    color: blue !important;
+                    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+                }
+
+                #dependantForm .ui-button.delete {
+                    color: red !important;
+                }
+
+                #dependantForm  .ui-button:hover {
+                    background-color: #f0f0f075 !important;
+                    transform: scale(1.4);
+                }
+
+
+            </style>
+        </h:head>
+        <h:body>
+            <div class="back">
+                <h:button value="Back" outcome="/pages/dependants/viewDependants.xhtml"/>
+            </div>
+            <div class="mainbody">
+
+                <h:form id="dependantsForm">
+                    <div class="top-p-a">
+
+                        <div class="profile">
+                            <h1>
+                                User
+                            </h1>
+                            <h3>Username: josh85</h3>
+                            <h3>Name: Arube Joshua</h3>
+
+                        </div>
+
+                        <div class="actns">
+                            <p:commandButton icon="pi pi-user-plus"
+                                             value="Add Dependant" oncomplete="PF('dlg').show();" process="@this"
+                                             update=":dependantForm:dependantTable"
+                                             styleClass="add"/>
+                            <p:commandButton icon="pi pi-user-minus"
+                                             value="Delete All Dependants"
+                                             action="#{dependantBean.deleteAllDependantsForUser()}"
+                                             styleClass="ui-button-danger mr-2"/>
+                        </div>
+                    </div>
+
+                    <p:dialog header="Add Dependant" widgetVar="dlg" modal="true" id="dlg" resizable="false"
+                              width="400">
+                        <h:panelGrid columns="2" cellpadding="5">
+
+                            <h:outputLabel for="firstname" value="First Name:"/>
+                            <p:inputText id="firstname" value="#{dependantBean.firstname}" required="true"/>
+
+                            <h:outputLabel for="lastname" value="Last Name:"/>
+                            <p:inputText id="lastname" value="#{dependantBean.lastname}" required="true"/>
+
+                            <h:outputLabel for="dob" value="Date of Birth:"/>
+                            <p:calendar id="dob" value="#{dependantBean.dateOfBirth}" pattern="yyyy-MM-dd"
+                                        required="true"/>
+
+                            <h:outputLabel for="gender" value="Gender:"/>
+                            <p:selectOneMenu id="gender" value="#{dependantBean.gender}" required="true">
+                                <f:selectItem itemLabel="Select Gender" itemValue=""/>
+                                <f:selectItem itemLabel="Male" itemValue="MALE"/>
+                                <f:selectItem itemLabel="Female" itemValue="FEMALE"/>
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+
+                        <p:commandButton value="Save" action="#{dependantBean.saveDependant()}"
+                                         update=":dependantForm:dependantTable"
+                                         oncomplete="PF('dlg').hide();"/>
+                    </p:dialog>
+                </h:form>
+
+
+                <h:form id="searchForm">
+                    <p:inputText id="search" value="#{dependantBean.search}"
+                                 icon="pi pi-search"
+                                 placeholder="Search first name or last name">
+                        <p:ajax event="keyup" update=":dependantForm:dependantTable"
+                                listener="#{dependantBean.searchDependants()}"/>
+                    </p:inputText>
+
+                    <h:outputLabel for="filter" value="Filter By Gender:"/>
+                    <p:selectOneMenu id="filter" value="#{dependantBean.gender}">
+                        <f:selectItem itemLabel="None" itemValue=""/>
+                        <f:selectItems value="#{dependantBean.genders}" var="gender" itemLabel="#{gender}"
+                                       itemValue="#{gender}"/>
+                        <p:ajax update=":dependantForm:dependantTable" listener="#{dependantBean.filterDependants()}"/>
+                    </p:selectOneMenu>
+                </h:form>
+
+
+                <div id="actionPad">
+                    <span>4 Users</span>
+                </div>
+
+
+                <h:form id="dependantForm">
+                    <p:dataTable id="dependantTable" var="dependant"
+                                 value="#{dependantBean.getDependantsForUser(dependantBean.sessionUser)}"
+                                 emptyMessage="No dependants available">
+                        <p:column headerText="First Name">
+                            <h:outputText value="#{dependant.firstname}"/>
+                        </p:column>
+                        <p:column headerText="Last Name">
+                            <h:outputText value="#{dependant.lastname}"/>
+                        </p:column>
+                        <p:column headerText="Date of Birth">
+                            <h:outputText value="#{dependant.dateOfBirth}">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Gender">
+                            <h:outputText value="#{dependant.gender}"/>
+                        </p:column>
+
+                        <p:column headerText="Actions">
+                            <p:commandButton icon="pi pi-user-edit" onclick="PF('dependantDialog').show()"
+                                             update="dependantDialog"/>
+
+                            <p:dialog id="dependantDialog" widgetVar="dependantDialog" header="Update Dependant"
+                                      modal="true"
+                                      dynamic="true">
+                                <h:form id="d_f">
+                                    <p:inputText id="f_n" value="#{dependantBean.selectedDependant.firstname}"/>
+                                    <p:inputText id="l_n" value="#{dependantBean.selectedDependant.lastname}"/>
+                                    <p:inputText id="d_o_b" value="#{dependantBean.selectedDependant.dateOfBirth}"/>
+                                    <!-- other fields as needed -->
+                                    <p:commandButton value="Save"
+                                                     action="#{dependantBean.update(dependantBean.selectedDependant)}"
+                                                     oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dependantDialog').hide()"
+                                                     update=":dependantForm:dependantTable"/>
+                                </h:form>
+                            </p:dialog>
+
+                            <p:commandButton icon="pi pi-trash" action="#{dependantBean.delete(dependant)}"
+                                             update=":dependantForm:dependantTable"
+                            styleClass="delete"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+
+            </div>
+        </h:body>
+    </ui:define>
+</ui:composition>

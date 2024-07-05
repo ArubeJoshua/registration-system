@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" lang="en">
+<h:head>
+    <title><ui:insert name="pageTitle">Default Title</ui:insert></title>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    </f:facet>
+
+    <style type="text/css">
+        body {
+            background-color: #b1ccfe12;
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            height: 100vh;
+            margin: 0;
+
+        }
+
+        #combination {
+            display: flex;
+            width: fit-content;
+            border-radius: 15px;
+            height: fit-content;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .loginImage {
+            height: 600px;
+            width: 400px;
+            opacity: .6;
+
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            width: 800px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            height: 600px;
+            justify-content: center;
+            justify-items: center;
+            display: flex;
+        }
+
+        .ui-float-label {
+            margin-top: 2em;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="password"] {
+            width: calc(100% - 25px); /* Adjust width as needed */
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .loginBtn {
+            margin-top: 3rem;
+        }
+
+
+        h1, h2, h3, h4, h5, h6 {
+            color: #8c7d91 !important;
+            font-family: Arial, sans-serif !important;
+        }
+
+    </style>
+</h:head>
+
+<h:body>
+    <div id="combination">
+        <h:graphicImage alt="Honeycomb" name="background.jpg" library="images" styleClass="loginImage"/>
+        <div class="glass-card">
+
+            <h:form>
+                <h1>Welcome to J's User Management System</h1>
+                <h3>Login to Continue</h3>
+                <span class="ui-float-label">
+                    <p:inputText id="username" value="#{loginBean.username}"/>
+                    <p:outputLabel for="@previous" value="Username"/>
+                </span>
+
+                <span class="ui-float-label">
+                    <p:password id="password" value="#{loginBean.password}" toggleable="true" redisplay="true"/>
+                    <p:outputLabel for="password" value="Password"/>
+                </span>
+
+                <div class="loginBtn">
+                    <p:commandButton value="Login" action="#{loginBean.login()}" update="@form"/>
+                </div>
+
+
+                <p:messages globalOnly="true"/>
+            </h:form>
+        </div>
+    </div>
+</h:body>
+</html>

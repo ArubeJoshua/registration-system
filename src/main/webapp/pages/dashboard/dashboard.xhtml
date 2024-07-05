@@ -1,0 +1,348 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template/pageTemplate.xhtml">
+
+    <ui:define name="content">
+
+        <h:head>
+
+            <!--                <link rel="stylesheet href="https://cdnjs.cloudflare.com/ajax/libs/primeicons/7.0.0/primeicons.css"></link>-->
+            <!--            <link rel="stylesheet" type="text/css" href="#{resource['css/styles.css']}" />-->
+            <!--            <link rel="stylesheet" type="text/css" href="#{resource['css/menu.css']}" />-->
+            <style>
+                /* Reset some default styles */
+                body, h1, h2, h3, h4, h5, h6, p, ul, ol, li, div {
+                    margin: 0;
+                    padding: 0;
+                    border: 0;
+                    font: inherit;
+                    vertical-align: baseline;
+
+                }
+
+                /* Set some basic styles for the body */
+                body {
+                    line-height: 1 !important;
+                    font-family: Arial, sans-serif !important;
+                    display: block !important;
+                    min-height: 100vh !important;
+                    background-color: #b1ccfe12 !important;
+                    color: #494848 !important;
+                }
+
+                /* Style headers */
+                h1, h2, h3, h4, h5, h6 {
+                    color: #655c5c !important;
+                    margin-bottom: 0.5em;
+                    font-family: Arial, sans-serif !important;
+                }
+
+                h1 {
+                    font-size: 2em;
+
+                }
+
+                h2 {
+                    font-size: 1.5em;
+                }
+
+                /* Style paragraphs */
+                p {
+                    margin-bottom: 1em;
+                    line-height: 1.5;
+                }
+
+                /* Style links */
+                a {
+                    color: #655c5c !important;
+                    text-decoration: none !important;
+                }
+
+                a:hover {
+                    color: blue !important;
+                    text-decoration: none !important;
+                }
+
+                /* Style lists */
+                ul, ol {
+                    margin-bottom: 1em;
+                    padding-left: 30px;
+                    margin-top: 3em;
+                }
+
+                li {
+                    margin-bottom: 0.5em;
+                    list-style: none;
+                    display: block;
+                }
+
+
+                .page h1 {
+                    margin-left: 3rem;
+                    padding: 1rem;
+                    color: #494848;
+                    font-size: 1.5em;
+                    font-weight: bold;
+                }
+
+
+                .page {
+                    width: 1185px;
+                    height: 4rem;
+                    position: absolute;
+                    background-color: white;
+                    margin-left: 339px;
+                    margin-top: 0;
+                }
+
+                .ui-sidebar {
+                    background-color: white;
+                    position: fixed;
+                    width: 21rem;
+                    height: 100vh;
+                }
+
+                li.listItem {
+                    list-style: none;
+                    padding: 15px;
+                    text-decoration: none;
+                }
+
+                h1.admin {
+                    font-weight: bold;
+                    color: #494848;
+                    font-size: 1.5em;
+                    padding: .5em;
+                    margin-left: 6em;
+                    margin-top: 2.5rem;
+                }
+
+                .systemTitle {
+                    color: blue;
+                    padding: 1em;
+                }
+
+                .ui-analog-clock {
+                    width: 150px;
+                    margin-left: 5em;
+                    margin-top: 7em;
+                }
+
+                i {
+                    font-size: 1.3rem;
+                    margin-right: 1.5em;
+                }
+
+
+                .cards{
+                    margin-left: 352px;
+                    display: inline-flex;
+                    width: 1162px;
+                    justify-content: space-between;
+                    margin-top: 6.5rem;
+                }
+
+                .card {
+                    display: flex;
+                    align-items: center;
+                    background: white;
+                    border-radius: 15px;
+                    width: 12rem;
+                    height: fit-content;
+                    padding: .5em;
+                }
+
+                .sect {
+                    margin-left: 1em;
+                }
+
+
+                h5 {
+                    color: #a0a0cc  !important;
+                }
+
+
+                h4 {
+                    font-weight: bold !important;
+                }
+
+                .img1 {
+                    position: absolute;
+                    height: 5em;
+                    margin-top: 1em;
+                    margin-left: 4em;
+                    background: #6403ff3b;
+                    border-radius: 2.5em;
+                    width: 5em;
+                }
+
+                .img2, .img3, .img4, .img5, .img6  {
+                    height: 3em;
+                    margin-left: 1em;
+                    border-radius: 1.25em;
+                    width: 3em;
+                    padding: .5em;
+                }
+
+                .img2 {
+                    background: #00fff136;
+                }
+
+                .img3 {
+                    background: #108fff24;
+                }
+
+                .img4 {
+                    background: #005aff36;
+                }
+
+                .img5 {
+                    background: #6f4a6a1f;
+                }
+
+                .img6 {
+                    background: #ff000021;
+                }
+
+                .card-heading {
+                    margin-left: 339px;
+                    margin-top: 4rem;
+                    position: absolute;
+                    padding: 1em;
+                    font-weight: bold;
+                }
+
+                .charts-container {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-top: 20px;
+                    margin-left: 35rem;
+                }
+
+                .pie-chart{
+                    background-color: #fff;
+                    border: 1px solid #ddd;
+                    border-radius: 16px;
+                    padding: 10px;
+                    display: flex;
+                    align-items: center;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    margin-right: 10px;
+                    height: 60vh;
+                }
+
+                .pie-chart {
+                    width: 85%;
+                }
+
+
+
+
+            </style>
+        </h:head>
+        <h:body class="home">
+            <div class="page">
+                <h1>Dashboard</h1>
+            </div>
+
+            <div class="ui-sidebar">
+                <h:graphicImage value="/resources/images/icons8-user-shield-96.png" styleClass="img1"/>
+                <h1 class="admin">Admin</h1>
+                <h:form>
+                    <ul class="listType">
+                        <li class="listItem">
+                            <h:link outcome="/pages/dashboard/dashboard.xhtml?faces-redirect=true"
+                                    styleClass="listLink #{request.contextPath.contains('dashboard') ? 'activeLink' : ''}">
+                                <i class="pi pi-home"></i>
+                                <h:outputText value="Dashboard"/>
+                            </h:link>
+                        </li>
+                        <li class="listItem">
+                            <h:link outcome="/pages/viewUsers/viewUsers.xhtml?faces-redirect=true"
+                                    styleClass="listLink #{request.contextPath.contains('viewUsers') ? 'activeLink' : ''}">
+                                <i class="pi pi-users"></i>
+                                <h:outputText value="Users"/>
+                            </h:link>
+                        </li>
+                        <li class="listItem">
+                            <h:link outcome="/pages/dependants/viewDependants.xhtml?faces-redirect=true"
+                                    styleClass="listLink">
+                                <i class="pi pi-sitemap"></i>
+                                <h:outputText value="Dependants"/>
+                            </h:link>
+                        </li>
+                        <li class="listItem">
+                            <h:link outcome="/pages/Settings/adminProfile.xhtml?faces-redirect=true"
+                                    styleClass="listLink">
+                                <i class="pi pi-cog"></i>
+                                <h:outputText value="Settings"/>
+                            </h:link>
+                        </li>
+                        <li class="listItem">
+                            <h:commandLink action="#{loginBean.logout}" styleClass="listLink">
+                                <i class="pi pi-sign-out"></i>
+                                <h:outputText value="Logout"/>
+                            </h:commandLink>
+                        </li>
+                    </ul>
+                </h:form>
+
+                <div>
+                    <p:clock displayMode="analog"/>
+                </div>
+            </div>
+
+            <div class="mainBody">
+                <div class="card-heading">My Cards</div>
+                <div class="cards">
+                    <div class="card 1">
+                        <h:graphicImage styleClass="img2" value="/resources/images/icons8-users-96.png"/>
+                        <div class="sect">
+                            <h5>Users</h5>
+                            <h4>#{userBean.filteredUsersCount}</h4>
+                        </div>
+                    </div>
+                    <div class="card 2">
+                        <h:graphicImage styleClass="img3" value="/resources/images/icons8-decision-making-96.png"/>
+                        <div class="sect">
+                            <h5>Dependants</h5>
+                            <h4>#{dependantBean.filteredDependantsCount}</h4>
+                        </div>
+                    </div>
+                    <div class="card 3">
+                        <h:graphicImage styleClass="img4" value="/resources/images/3d-fluency-link.png"/>
+                        <div class="sect">
+                            <h5>Users W/D</h5>
+                            <h4>#{userBean.usersWithDependants()}</h4>
+                        </div>
+                    </div>
+                    <div class="card 4">
+                        <h:graphicImage styleClass="img5" value="/resources/images/icons8-link-96.png"/>
+                        <div class="sect"><h5>Users W'/D</h5>
+                            <h4>#{userBean.usersWithoutDependants()}</h4></div>
+                    </div>
+                    <div class="card 5">
+                        <h:graphicImage/>
+                        <h:graphicImage styleClass="img6" value="/resources/images/icons8-trash-96.png"/>
+                        <div class="sect"><h5>Users -D</h5>
+                            <h4>#{userBean.deletedUsers()}</h4></div>
+                    </div>
+                </div>
+
+                <div class="charts-container">
+                    <div class="pie-chart">
+                        <p:chart type="pie" model="#{chartBean.pieModel}" styleClass="custom-chart" style="width: 100%" />
+                    </div>
+                </div>
+
+
+
+            </div>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>
