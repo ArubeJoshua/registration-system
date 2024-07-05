@@ -1,0 +1,314 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template/pageTemplate.xhtml">
+
+    <ui:define name="content">
+
+        <h:head>
+            <!--                <link rel="stylesheet href="https://cdnjs.cloudflare.com/ajax/libs/primeicons/7.0.0/primeicons.css"></link>-->
+            <!--            <link rel="stylesheet" type="text/css" href="#{resource['css/styles.css']}" />-->
+            <!--            <link rel="stylesheet" type="text/css" href="#{resource['css/menu.css']}" />-->
+            <style>
+                /* Reset some default styles */
+                body, h1, h2, h3, h4, h5, h6, p, ul, ol, li, div {
+                    margin: 0;
+                    padding: 0;
+                    border: 0;
+                    font: inherit;
+                    vertical-align: baseline;
+
+                }
+
+                /* Set some basic styles for the body */
+                body {
+                    line-height: 1 !important;
+                    font-family: Arial, sans-serif !important;
+                    display: block !important;
+                    min-height: 100vh !important;
+                    background-color: #b1ccfe12 !important;
+                    color: #494848 !important;
+                }
+
+                /* Style headers */
+                h1, h2, h3, h4, h5, h6 {
+                    color: #655c5c !important;
+                    margin-bottom: 0.5em;
+                    font-family: Arial, sans-serif !important;
+                }
+
+                h1 {
+                    font-size: 2em;
+
+                }
+
+                h2 {
+                    font-size: 1.5em;
+                }
+
+                /* Style paragraphs */
+                p {
+                    margin-bottom: 1em;
+                    line-height: 1.5;
+                }
+
+                /* Style links */
+                a {
+                    color: #655c5c !important;
+                    text-decoration: none !important;
+                }
+
+                a:hover {
+                    color: blue !important;
+                    text-decoration: none !important;
+                }
+
+                /* Style lists */
+                ul, ol {
+                    margin-bottom: 1em;
+                    padding-left: 30px;
+                    margin-top: 3em;
+                }
+
+                li {
+                    margin-bottom: 0.5em;
+                    list-style: none;
+                    display: block;
+                }
+
+
+                .page h1 {
+                    margin-left: 3rem;
+                    padding: 1rem;
+                    color: #494848;
+                    font-size: 1.5em;
+                    font-weight: bold;
+                }
+
+
+                .page {
+                    width: 1185px;
+                    height: 4rem;
+                    position: absolute;
+                    background-color: white;
+                    margin-left: 339px;
+                    margin-top: 0;
+                }
+
+                .ui-sidebar {
+                    background-color: white;
+                    position: fixed;
+                    width: 21rem;
+                    height: 100vh;
+                }
+
+                li.listItem {
+                    list-style: none;
+                    padding: 15px;
+                    text-decoration: none;
+                }
+
+                h1.admin {
+                    font-weight: bold;
+                    color: #494848;
+                    font-size: 1.5em;
+                    padding: .5em;
+                    margin-left: 6em;
+                    margin-top: 2.5rem;
+                }
+
+                .systemTitle {
+                    color: blue;
+                    padding: 1em;
+                }
+
+                .ui-analog-clock {
+                    width: 150px;
+                    margin-left: 5em;
+                    margin-top: 7em;
+                }
+
+                i {
+                    font-size: 1.3rem;
+                    margin-right: 1.5em;
+                }
+
+
+                .card {
+                    width: 1185px;
+                    position: absolute;
+                    background-color: white;
+                    margin-left: 339px;
+                    margin-top: 5rem;
+                    padding: 3rem;
+                    height: 625px;
+                }
+
+                .form-div {
+                    width: 800px;
+                    margin: 0 auto;
+                }
+
+                .form-div h2 {
+                    text-align: center;
+                    margin-bottom: 20px;
+                    color: #333;
+                }
+
+                .form-div table {
+                    width: 100%;
+                }
+
+                .form-div .form-label {
+                    display: block;
+                    margin-bottom: 5px;
+                    font-weight: bold;
+                    color: #333;
+                }
+
+                .form-div input[type="text"],
+                .form-div input[type="password"] {
+                    width: 100%;
+                    margin-bottom: 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 3px;
+                    box-sizing: border-box;
+                    padding: 13px;
+                    color: grey;
+                }
+
+                .purpose {
+                    width: fit-content;
+                    border-bottom: 5px solid blue;
+                    color: blue;
+                    padding: 5px;
+                }
+
+                .img1 {
+                    position: absolute;
+                    height: 5em;
+                    margin-top: 1em;
+                    margin-left: 4em;
+                    background: #6403ff3b;
+                    border-radius: 2.5em;
+                    width: 5em;
+                }
+
+                div.profile {
+                    position: absolute;
+                    margin-top: 2em;
+                }
+
+
+
+            </style>
+        </h:head>
+        <h:body class="home">
+
+            <div class="page">
+                <h1>Settings</h1>
+            </div>
+
+            <div class="ui-sidebar">
+                <h:graphicImage value="/resources/images/icons8-user-shield-96.png" styleClass="img1"/>
+                <h1 class="admin">Admin</h1>
+                <h:form>
+                    <ul class="listType">
+                        <li class="listItem">
+                            <h:link outcome="/pages/dashboard/dashboard.xhtml?faces-redirect=true"
+                                    styleClass="listLink #{request.contextPath.contains('dashboard') ? 'activeLink' : ''}">
+                                <i class="pi pi-home"></i>
+                                <h:outputText value="Dashboard"/>
+                            </h:link>
+                        </li>
+                        <li class="listItem">
+                            <h:link outcome="/pages/viewUsers/viewUsers.xhtml?faces-redirect=true"
+                                    styleClass="listLink #{request.contextPath.contains('viewUsers') ? 'activeLink' : ''}">
+                                <i class="pi pi-users"></i>
+                                <h:outputText value="Users"/>
+                            </h:link>
+                        </li>
+                        <li class="listItem">
+                            <h:link outcome="/pages/dependants/viewDependants.xhtml?faces-redirect=true" styleClass="listLink">
+                                <i class="pi pi-sitemap"></i>
+                                <h:outputText value="Dependants"/>
+                            </h:link>
+                        </li>
+                        <li class="listItem">
+                            <h:link outcome="/pages/Settings/adminProfile.xhtml?faces-redirect=true" styleClass="listLink">
+                                <i class="pi pi-cog"></i>
+                                <h:outputText value="Settings"/>
+                            </h:link>
+                        </li>
+                        <li class="listItem">
+                            <h:commandLink action="#{loginBean.logout}" styleClass="listLink">
+                                <i class="pi pi-sign-out"></i>
+                                <h:outputText value="Logout"/>
+                            </h:commandLink>
+                        </li>
+                    </ul>
+                </h:form>
+
+                <div>
+                    <p:clock displayMode="analog"/>
+                </div>
+            </div>
+
+            <div class="mainBody">
+                <div class="card">
+                    <div class="purpose">
+                        Edit Profile
+                    </div>
+
+                    <div class="profile">
+                        <h:graphicImage value="/resources/images/profile.png"/>
+                    </div>
+
+                    <div class="form-div">
+                        <h:form>
+                            <h:panelGrid columns="2">
+                                <h:outputLabel for="username">Username:</h:outputLabel>
+                                <h:inputText id="username" value="#{adminBean.admin.username}" required="true"/>
+
+                                <h:outputLabel for="firstname">First Name:</h:outputLabel>
+                                <h:inputText id="firstname" value="#{adminBean.admin.firstname}" required="true"/>
+
+                                <h:outputLabel for="lastname">Last Name:</h:outputLabel>
+                                <h:inputText id="lastname" value="#{adminBean.admin.lastname}" required="true"/>
+
+                                <h:outputLabel for="password">Password:</h:outputLabel>
+                                <h:inputSecret id="password" value="#{adminBean.admin.password}" required="true"/>
+
+                                <h:outputLabel for="dateOfBirth">Date of Birth:</h:outputLabel>
+                                <p:calendar id="dateOfBirth"
+                                            value="#{adminBean.admin.dateOfBirth}"
+                                            pattern="dd/MM/yyyy"
+                                            placeholder="Date Of Birth"
+                                            showOn="both"
+                                            navigator="true"
+                                            mode="popup"
+                                            yearRange="c-100:c"
+                                            maxdate=""
+                                />
+
+                                <h:outputLabel for="email">Email:</h:outputLabel>
+                                <h:inputText id="email" value="#{adminBean.admin.email}" required="true">
+                                    <f:validateRegex pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"/>
+                                </h:inputText>
+                            </h:panelGrid>
+
+                            <p:commandButton value="Save" action="#{adminBean.updateAdmin()}"/>
+                        </h:form>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>

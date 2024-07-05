@@ -1,0 +1,482 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template/pageTemplate.xhtml">
+
+    <ui:define name="content">
+
+        <h:head>
+            <!--                <link rel="stylesheet href="https://cdnjs.cloudflare.com/ajax/libs/primeicons/7.0.0/primeicons.css"></link>-->
+            <!--            <link rel="stylesheet" type="text/css" href="#{resource['css/styles.css']}" />-->
+            <!--            <link rel="stylesheet" type="text/css" href="#{resource['css/menu.css']}" />-->
+            <style>
+                /* Reset some default styles */
+                body, h1, h2, h3, h4, h5, h6, p, ul, ol, li, div {
+                    margin: 0;
+                    padding: 0;
+                    border: 0;
+                    font: inherit;
+                    vertical-align: baseline;
+
+                }
+
+                /* Set some basic styles for the body */
+                body {
+                    line-height: 1 !important;
+                    font-family: Arial, sans-serif !important;
+                    display: block !important;
+                    min-height: 100vh !important;
+                    background-color: #b1ccfe12 !important;
+                    color: #494848 !important;
+                }
+
+                /* Style headers */
+                h1, h2, h3, h4, h5, h6 {
+                    color: #655c5c !important;
+                    margin-bottom: 0.5em;
+                    font-family: Arial, sans-serif !important;
+                }
+
+                h1 {
+                    font-size: 2em;
+
+                }
+
+                h2 {
+                    font-size: 1.5em;
+                }
+
+                /* Style paragraphs */
+                p {
+                    margin-bottom: 1em;
+                    line-height: 1.5;
+                }
+
+                /* Style links */
+                a {
+                    color: #655c5c !important;
+                    text-decoration: none !important;
+                }
+
+                a:hover {
+                    color: blue !important;
+                    text-decoration: none !important;
+                }
+
+                /* Style lists */
+                ul, ol {
+                    margin-bottom: 1em;
+                    padding-left: 30px;
+                    margin-top: 3em;
+                }
+
+                li {
+                    margin-bottom: 0.5em;
+                    list-style: none;
+                    display: block;
+                }
+
+
+                .page h1 {
+                    margin-left: 3rem;
+                    padding: 1rem;
+                    color: #494848;
+                    font-size: 1.5em;
+                    font-weight: bold;
+                }
+
+
+                .page {
+                    width: 1185px;
+                    height: 4rem;
+                    position: absolute;
+                    background-color: white;
+                    margin-left: 339px;
+                    margin-top: 0;
+                }
+
+                .ui-sidebar {
+                    background-color: white;
+                    position: fixed;
+                    width: 21rem;
+                    height: 100vh;
+                }
+
+                li.listItem {
+                    list-style: none;
+                    padding: 15px;
+                    text-decoration: none;
+                }
+
+                h1.admin {
+                    font-weight: bold;
+                    color: #494848;
+                    font-size: 1.5em;
+                    padding: .5em;
+                    margin-left: 6em;
+                    margin-top: 2.5rem;
+                }
+
+                .systemTitle {
+                    color: blue;
+                    padding: 1em;
+                }
+
+                .ui-analog-clock {
+                    width: 150px;
+                    margin-left: 5em;
+                    margin-top: 7em;
+                }
+
+                i {
+                    font-size: 1.3rem;
+                    margin-right: 1.5em;
+                }
+
+                .mainBody {
+                    margin-left: 365px;
+                    position: absolute;
+                    margin-top: 100px;
+                    width: 1130px;
+                }
+
+                #actionPad {
+                    width: 1130px;
+                    background-color: #ffffff !important;
+                    margin-top: 1rem;
+                    padding-bottom: .5rem;
+                    padding-top: .5rem;
+                    padding-left: 2rem;
+                }
+
+                .btn1 {
+
+                }
+
+                .actns {
+                    display: inline-flex;
+                    position: relative;
+                    margin-left: 54rem;
+                }
+
+                .title {
+                    padding: .3em;
+                    color: #a0a0cc ;
+                }
+
+                body .ui-datatable .ui-datatable-data>tr>th{
+                    padding: .3rem .3rem !important;
+                }
+
+                body .ui-datatable .ui-datatable-data>tr>td {
+                    padding: .3rem 1rem !important;
+                }
+
+                body .ui-datatable thead th .ui-column-title {
+                    color: #a0a0cc  !important;
+                    font-family: Arial, sans-serif !important;
+                }
+
+                .img1 {
+                    position: absolute;
+                    height: 5em;
+                    margin-top: 1em;
+                    margin-left: 4em;
+                    background: #ededed;
+                    border-radius: 2.5em;
+                    width: 5em;
+                }
+
+                .cards {
+                    display: inline-flex;
+                    width: 1130px;
+                    justify-content: space-between;
+                    margin-bottom: .5em;
+                }
+
+                .card {
+                    display: flex;
+                    align-items: center;
+                    background: white;
+                    border-radius: 15px;
+                    width: 22rem;
+                    padding: .5em;
+                    justify-content: center;
+                }
+
+                .sect {
+                    margin-left: 1em;
+                }
+
+
+                h5 {
+                    color: #a0a0cc  !important;
+                }
+
+
+                h4 {
+                    font-weight: bold !important;
+                }
+
+                .img1 {
+                    position: absolute;
+                    height: 5em;
+                    margin-top: 1em;
+                    margin-left: 4em;
+                    background: #6403ff3b;
+                    border-radius: 2.5em;
+                    width: 5em;
+                }
+
+                .img2, .img3, .img4 {
+                    height: 3em;
+                    margin-left: 1em;
+                    border-radius: 1.25em;
+                    width: 3em;
+                    padding: .5em;
+                }
+
+
+                img.img4 {
+                    background: #cc4acc40;
+                }
+
+                img.img3 {
+                    background: #ff000021;
+                }
+
+                img.img2 {
+                    background: #b5dcff52;
+                }
+
+                form#searchForm {
+                    width: 1130px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+
+                input#searchForm\:search.ui-inputfield {
+                    width: 840px !important;
+                }
+
+                #dependantForm .ui-button {
+                    background: white !important;
+                    border: none !important;
+                    color: blue !important;
+                    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+                }
+
+                #dependantForm .ui-button.delete {
+                    color: red !important;
+                }
+
+                #dependantForm  .ui-button:hover {
+                    background-color: #f0f0f075 !important;
+                    transform: scale(1.4);
+                }
+
+
+            </style>
+        </h:head>
+        <h:body class="home">
+
+            <div class="page">
+                <h1>Dependants</h1>
+            </div>
+
+            <div class="ui-sidebar">
+                <h:graphicImage value="/resources/images/icons8-user-shield-96.png" styleClass="img1"/>
+                <h1 class="admin">Admin</h1>
+                <h:form>
+                    <ul class="listType">
+                        <li class="listItem">
+                            <h:link outcome="/pages/dashboard/dashboard.xhtml?faces-redirect=true"
+                                    styleClass="listLink">
+                                <i class="pi pi-home"></i>
+                                <h:outputText value="Dashboard"/>
+                            </h:link>
+                        </li>
+                        <li class="listItem">
+                            <h:link outcome="/pages/viewUsers/viewUsers.xhtml?faces-redirect=true"
+                                    styleClass="listLink">
+                                <i class="pi pi-users"></i>
+                                <h:outputText value="Users"/>
+                            </h:link>
+                        </li>
+                        <li class="listItem">
+                            <h:link outcome="/pages/dependants/viewDependants.xhtml?faces-redirect=true"
+                                    styleClass="listLink">
+                                <i class="pi pi-sitemap"></i>
+                                <h:outputText value="Dependants"/>
+                            </h:link>
+                        </li>
+                        <li class="listItem">
+                            <h:link outcome="/pages/Settings/adminProfile.xhtml?faces-redirect=true"
+                                    styleClass="listLink">
+                                <i class="pi pi-cog"></i>
+                                <h:outputText value="Settings"/>
+                            </h:link>
+                        </li>
+                        <li class="listItem">
+                            <h:commandLink action="#{loginBean.logout}" styleClass="listLink">
+                                <i class="pi pi-sign-out"></i>
+                                <h:outputText value="Logout"/>
+                            </h:commandLink>
+                        </li>
+                    </ul>
+                </h:form>
+
+                <div>
+                    <p:clock displayMode="analog"/>
+                </div>
+            </div>
+            <div class="mainBody">
+                <div class="cards">
+                    <div class="card 1">
+                        <h:graphicImage styleClass="img2" value="/resources/images/icons8-male-96.png"/>
+                        <div class="sect">
+                            <h5>Number of Male Dependants</h5>
+                            <h4>#{dependantBean.maleDependants()}</h4>
+                        </div>
+                    </div>
+                    <div class="card 2">
+                        <h:graphicImage styleClass="img3" value="/resources/images/icons8-female-96.png"/>
+                        <div class="sect">
+                            <h5>Number of Female Dependants</h5>
+                            <h4>#{dependantBean.femaleDependants()}</h4>
+                        </div>
+                    </div>
+                    <div class="card 3">
+                        <h:graphicImage styleClass="img4" value="/resources/images/icons8-percentage-96.png"/>
+                        <div class="sect">
+                            <h5>Male:Female ratio</h5>
+                            <h4>#{dependantBean.maleDependants()}:#{dependantBean.femaleDependants()}</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="title">Dependant Table</div>
+
+                <h:form id="searchForm">
+                    <p:inputText id="search" value="#{dependantBean.search}"
+                                 icon="pi pi-search"
+                                 placeholder="Search first name or last name">
+                        <p:ajax event="keyup" update=":dependantForm:dependantTable"
+                                listener="#{dependantBean.searchDependants()}"/>
+                    </p:inputText>
+
+                    <h:outputLabel for="filter" value="Filter By Gender:"/>
+                    <p:selectOneMenu id="filter" value="#{dependantBean.gender}">
+                        <f:selectItem itemLabel="None" itemValue=""/>
+                        <f:selectItems value="#{dependantBean.genders}" var="gender" itemLabel="#{gender}" itemValue="#{gender}"/>
+                        <p:ajax update=":dependantForm:dependantTable" listener="#{dependantBean.filterDependants()}"/>
+                    </p:selectOneMenu>
+                </h:form>
+
+
+                <div id="actionPad">
+                    <span>#{dependantBean.filteredDependantsCount} Dependants</span>
+
+                    <h:form class="actns">
+                        <p:commandButton action="#{dependantBean.deleteAllDependants()}"
+                                         styleClass="ui-button-danger mr-2"
+                                         icon="pi pi-user-minus" value="Delete All"/>
+                    </h:form>
+                </div>
+
+
+                <h:form id="dependantForm">
+                    <p:dataTable id="dependantTable" var="dependant" value="#{dependantBean.filteredDependants}"
+                                 rowIndexVar="rowIndex"
+                                 emptyMessage="No dependants available">
+                        <p:column headerText="No.">
+                            <h:outputText value="#{rowIndex + 1}"/>
+                        </p:column>
+                        <p:column headerText="First Name">
+                            <h:outputText value="#{dependant.firstname}"/>
+                        </p:column>
+                        <p:column headerText="Last Name">
+                            <h:outputText value="#{dependant.lastname}"/>
+                        </p:column>
+                        <p:column headerText="Date of Birth">
+                            <h:outputText value="#{dependant.dateOfBirth}">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Gender">
+                            <h:outputText value="#{dependant.gender}"/>
+                        </p:column>
+                        <p:column headerText="User">
+                            <h:outputText value="#{dependant.user.lastname} #{dependant.user.firstname}"/>
+                        </p:column>
+                        <p:column headerText="Actions">
+                            <p:commandButton icon="pi pi-user-edit" oncomplete="PF('dependantDialog').show();"
+                                             process="@this"
+                                             update="dependantDialog"
+                                             actionListener="#{dependantBean.selectDependantForUpdate(dependant)}"/>
+
+                            <p:dialog id="dependantDialog" widgetVar="dependantDialog" header="Update User" modal="true"
+                                      dynamic="true" width="625px" resizable="false" responsive="true">
+                                <h:panelGrid columns="2" cellpadding="5" >
+
+                                    <h:outputLabel for="firstname" value="First Name: "/>
+                                    <p:inputText id="firstname" value="#{dependantBean.selectedDependant.firstname}"
+                                    />
+
+                                    <h:outputLabel for="lastname" value="Last Name: "/>
+                                    <p:inputText id="lastname" value="#{dependantBean.selectedDependant.lastname}"
+                                    />
+
+                                    <h:outputLabel for="gender" value="Gender: "/>
+                                    <p:selectOneMenu id="gender" value="#{dependantBean.selectedDependant.gender}"
+                                                     placeholder="Select Gender">
+                                        selectItem itemLabel="Select Gender" itemValue="" />
+                                        <f:selectItems value="#{dependantBean.genders}" var="gender" itemLabel="#{gender}" itemValue="#{gender}"/>
+                                    </p:selectOneMenu>
+
+
+                                    <h:outputLabel for="dateOfBirth" value="Date Of Birth: "/>
+                                    <p:calendar id="dateOfBirth"
+                                                value="#{dependantBean.selectedDependant.dateOfBirth}"
+                                                pattern="dd/MM/yyyy"
+                                                showOn="both"
+                                                navigator="true"
+                                                mode="popup"
+                                                yearRange="c-100:c"
+                                                maxdate=""
+                                    />
+                                </h:panelGrid>
+                                <p:commandButton value="Save"
+                                                 action="#{dependantBean.update(dependantBean.selectedDependant)}"
+                                                 oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dependantDialog').hide()"
+                                                 update=":dependantForm:dependantTable"/>
+                            </p:dialog>
+
+                            <p:growl id="message" showDetail="true"/>
+
+                            <p:commandButton action="#{dependantBean.delete(dependant)}" update="message"
+                                             styleClass="delete" icon="pi pi-trash">
+                                <p:confirm header="Confirmation" message="Do you want to delete this record?"
+                                           icon="pi pi-info-circle"/>
+                            </p:commandButton>
+
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true"
+                                             width="350">
+                                <p:commandButton value="No" type="button"
+                                                 styleClass="ui-confirmdialog-no ui-button-flat"/>
+                                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes"/>
+                            </p:confirmDialog>
+
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+
+            </div>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>

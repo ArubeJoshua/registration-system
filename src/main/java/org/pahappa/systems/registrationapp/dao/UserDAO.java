@@ -1,210 +1,247 @@
 package org.pahappa.systems.registrationapp.dao;
 
-import org.hibernate.*;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.pahappa.systems.registrationapp.config.SessionConfiguration;
+import org.pahappa.systems.registrationapp.models.Dependant;
 import org.pahappa.systems.registrationapp.models.User;
 
-import java.util.List;
+import javax.persistence.NoResultException;
 
-public class UserDAO {
-    private final SessionFactory sessionFactory;
+import org.hibernate.*;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.pahappa.systems.registrationapp.config.SessionConfiguration.getSessionFactory;
+
+public class UserDAO extends AbstractDAO<User> {
 
     public UserDAO() {
-        this.sessionFactory = SessionConfiguration.getSessionFactory();
+        super(User.class);
     }
 
-    public boolean isUsernameExists(String username) {
-        Session session = null;
+    public String getAdminUsername() {
+        Session session = getSessionFactory().openSession();
+        String username = null;
         try {
-            session = sessionFactory.openSession();
-            Criteria criteria = session.createCriteria(User.class);
-            criteria.add(Restrictions.eq("username", username));
-            criteria.setProjection(Projections.rowCount()); // Count rows matching the criteria
-            Long count = (Long) criteria.uniqueResult();
-            session.clear();
-            return count > 0; // If count > 0, username exists; otherwise, it does not
-
-        } catch (Exception e) {
-            e.printStackTrace(); // Handle or log the exception
-            return false;
+            Query query = session.createQuery("SELECT u.username FROM User u WHERE u.role = :role");
+            query.setParameter("role", "ADMIN");
+            query.setMaxResults(1); // Limit to one result
+            username = (String) query.uniqueResult();
+        } catch (NoResultException e) {
+            username = null;
         } finally {
-            if (session != null && session.isOpen()) {
+            session.close();
+        }
+        return username;
+    }
+
+    public User getAdminUser() {
+        Session session = null;
+        User adminUser = null;
+        try {
+            session = getSessionFactory().openSession();
+            Query query = session.createQuery("SELECT u FROM User u WHERE u.role = :role");
+            query.setParameter("role", "ADMIN");
+            query.setMaxResults(1); // Limit to one result
+            adminUser = (User) query.uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace(); // Handle exception appropriately in your application
+        } finally {
+            if (session != null) {
                 session.close();
             }
         }
+        return adminUser;
     }
 
-    public void save(User user) {
-        Transaction transaction = null;
-        Session session = null;
+    public void deleteAllEntities() {
+        Session session = getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
         try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
-            session.save(user);
-            transaction.commit();
-            session.clear();
-        } catch (Exception e){
-            if (transaction != null) {
-                transaction.rollback();
+            // Retrieve all users with role 'USER' and not deleted
+            List<User> users = session.createCriteria(User.class)
+                    .add(Restrictions.eq("deleted", false))
+                    .add(Restrictions.eq("role", "USER"))
+                    .list();
+
+            // Iterate through each user
+            for (User user : users) {
+                // Soft delete the user
+                user.setDeleted(true);
+
+                // Iterate through each dependent of the user and soft delete them
+                for (Dependant dependant : user.getDependants()) {
+                    dependant.setDeleted(true);
+                    session.update(dependant);
+                }
+                // Update the user in the session
+                session.update(user);
             }
-            e.printStackTrace();
+
+            transaction.commit();
+        } catch (Exception e) {
+            // Rollback the transaction in case of an exception
+            transaction.rollback();
+            throw e;
         } finally {
+            // Close the session
             if (session != null) {
                 session.close();
             }
         }
     }
 
-    public void update(User user, String oldUsername) {
-        Session session = null;
-        Transaction transaction = null;
+
+    public void deleteEntity(String username) {
+        Session session = getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
         try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
+            // Retrieve the user with the specified username
+            User user = (User) session.createCriteria(User.class)
+                    .add(Restrictions.eq("username", username))
+                    .uniqueResult();
 
-            Criteria criteria = session.createCriteria(User.class);
-            criteria.add(Restrictions.eq("username", oldUsername));
-            User existingUser = (User) criteria.uniqueResult();
-
-            if (existingUser != null) {
-                existingUser.setUsername(user.getUsername());
-                existingUser.setFirstname(user.getFirstname());
-                existingUser.setLastname(user.getLastname());
-                existingUser.setDateOfBirth(user.getDateOfBirth());
-
-                session.update(existingUser);
-
-                transaction.commit();
-                System.out.println("User updated successfully.");
-            } else {
-                System.out.println("User not found with username: " + user.getUsername());
+            // If the user exists, soft delete the user and their dependents
+            if (user != null) {
+                user.setDeleted(true);
+                for (Dependant dependant : user.getDependants()) {
+                    dependant.setDeleted(true);
+                    session.update(dependant);
+                }
+                session.update(user);
             }
-            session.clear();
 
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace(); // Log or handle the exception appropriately
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
-    }
-
-
-    public void deleteUser(String username) {
-       Session session = null;
-       Transaction transaction = null;
-       try{
-           session = sessionFactory.openSession();
-           transaction = session.beginTransaction();
-           Criteria criteria = session.createCriteria(User.class);
-           criteria.add(Restrictions.eq("username", username));
-           User user = (User) criteria.uniqueResult();
-
-           if (user != null) {
-               session.delete(user);
-               transaction.commit();
-           }
-           session.clear();
-       }catch (Exception e){
-           if (transaction != null) {
-               transaction.rollback();
-           }
-       }finally {
-           if (session != null) {
-               session.close();
-           }
-       }
-    }
-
-    public void deleteAllUsers() {
-        Session session = null;
-        Transaction transaction = null;
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
-
-            // Create a query to delete all users
-            Query query = session.createQuery("DELETE FROM User");
-            int rowsDeleted = query.executeUpdate();
-
+            // Commit the transaction
             transaction.commit();
+        } catch (Exception e) {
+            // Rollback the transaction in case of an exception
+            transaction.rollback();
+            throw e;
+        } finally {
+            // Close the session
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
 
-            System.out.println(rowsDeleted + " user(s) deleted successfully.");
-            session.clear();
+    public Set<User> getAllEntities(String role, boolean isDeleted) {
+        Session session = getSessionFactory().openSession();
+        try {
+            Criteria criteria = session.createCriteria(User.class);  // Specify User class directly
+            criteria.add(Restrictions.eq("role", role));
+            criteria.add(Restrictions.eq("deleted", isDeleted));
+            List<User> users = criteria.list();
+
+            // Initialize dependants for each user
+            for (User user : users) {
+                try {
+                    Hibernate.initialize(user.getDependants());
+                } catch (HibernateException e) {
+                    e.printStackTrace();
+                }
+            }
+            return new HashSet<>(users);
+        } finally {
+            session.close();
+        }
+    }
+
+    public User findById(Long userId) {
+        Session session = getSessionFactory().openSession();
+        try {
+            User user = (User) session.get(User.class, userId);
+            Hibernate.initialize(user.getDependants()); // Initialize the dependants collection
+            return user;
+        } finally {
+            if (session != null) {
+                session.close();
+
+            }
+        }
+    }
+
+    public Long countUsersWithDependants() {
+        Session session = sessionFactory.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+
+        try {
+
+            String hql =
+                    "SELECT COUNT(DISTINCT u) " +
+                            "FROM User u " +
+                            "JOIN u.dependants d " +
+                            "WHERE u.role = :userRole " +
+                            "AND u.deleted = :userDeleted " +
+                            "AND d.deleted = :dependantDeleted";
+
+            Query query = session.createQuery(hql);
+            query.setParameter("userRole", "USER");
+            query.setParameter("userDeleted", false);
+            query.setParameter("dependantDeleted", false);
+            return (Long) query.uniqueResult();
         } catch (Exception e) {
             if (transaction != null) {
-                transaction.rollback();
+                transaction.rollback(); // Rollback transaction on error
             }
-            e.printStackTrace(); // Handle or log the exception appropriately
+            throw e; // Re-throw the exception for proper handling
         } finally {
-            if (session != null && session.isOpen()) {
+            if (session != null) {
                 session.close();
+
             }
+
         }
     }
 
+    public Long countDeletedUsersWithRoleUSER() {
+        Session session = sessionFactory.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
 
-    public List<User> getAllUsers() {
-        Session session = null;
         try {
-            session = sessionFactory.openSession();
-            Criteria criteria = session.createCriteria(User.class);
-            session.clear();
-            return criteria.list();
+
+            String hql = "SELECT COUNT(u) FROM User u WHERE u.role = :userRole AND u.deleted = :userDeleted";
+
+            Query query = session.createQuery(hql);
+            query.setParameter("userRole", "USER");
+            query.setParameter("userDeleted", true);
+
+            return (Long) query.uniqueResult();
+
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            if (transaction != null) {
+                transaction.rollback(); // Rollback transaction on error
+            }
+            throw e; // Re-throw the exception for proper handling
         } finally {
-            if (session != null && session.isOpen()) {
+            if (session != null) {
                 session.close();
+
             }
         }
     }
 
-    public User getUserByUsername(String username) {
+    public List<Dependant> getDependants(User user) {
         Session session = null;
+        List<Dependant> dependants = null;
         try {
-            session = sessionFactory.openSession();
-            Criteria criteria = session.createCriteria(User.class);
-            criteria.add(Restrictions.eq("username", username));
-            session.clear();
-            return (User) criteria.uniqueResult();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            session = getSessionFactory().openSession();
+            Criteria criteria = session.createCriteria(Dependant.class);
+
+            // Add restrictions for user and deleted status
+            criteria.add(Restrictions.eq("user", user));
+            criteria.add(Restrictions.eq("deleted", false));
+
+            dependants = criteria.list();  // Correct method to get a list
         } finally {
-            if (session != null && session.isOpen()) {
+            if (session != null) {
                 session.close();
             }
         }
+        return dependants;
     }
-
-
-    public boolean containUsers() {
-        Session session = null;
-        try {
-            session = sessionFactory.openSession();
-
-            Criteria criteria = session.createCriteria(User.class);
-            criteria.setProjection(Projections.rowCount()); // Count rows matching the criteria
-            Long count = (Long) criteria.uniqueResult();
-            session.clear();
-
-            return count > 0; // Return true if there are users in the database
-        } catch (Exception e) {
-            e.printStackTrace(); // Handle or log the exception appropriately
-            return false;
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
-    }
-
 }
+
+
+

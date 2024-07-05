@@ -1,18 +1,23 @@
 package org.pahappa.systems.registrationapp.services;
 
-import org.pahappa.systems.registrationapp.exception.MissingAttributeException;
-import org.pahappa.systems.registrationapp.models.User;
+import org.mindrot.jbcrypt.BCrypt;
 import org.pahappa.systems.registrationapp.dao.UserDAO;
+import org.pahappa.systems.registrationapp.exception.MissingAttributeException;
+import org.pahappa.systems.registrationapp.models.Dependant;
+import org.pahappa.systems.registrationapp.models.User;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class UserService {
     private static final String DATE_FORMAT = "dd-MM-yyyy";
     private final UserDAO userDAO;
-    private User currentUser;
 
     public UserService() {
         userDAO = new UserDAO();
@@ -26,6 +31,9 @@ public class UserService {
             newUser.setFirstname(user.getFirstname());
             newUser.setLastname(user.getLastname());
             newUser.setDateOfBirth(user.getDateOfBirth());
+            newUser.setEmail(user.getEmail());
+            newUser.setRole("USER");
+            newUser.setPassword(user.getPassword());
             validateUserAttributes(newUser);
 
 
@@ -71,19 +79,13 @@ public class UserService {
     }
 
 
-
-    public List<User> retrieveUsersList() {
-        List<User> allUsers = userDAO.getAllUsers();
-        if (allUsers.isEmpty()) {
-            System.out.println("No users registered.");
-        }
-        return allUsers;
+    public Set<User> retrieveUsersList() {
+        return userDAO.getAllEntities("USER", false);
 
     }
 
     public User retrieveUser(String username) {
-        currentUser = userDAO.getUserByUsername(username);
-        return currentUser;
+        return userDAO.getEntityByUsername(username);
     }
 
     public boolean searchUsername(String username){
@@ -95,27 +97,21 @@ public class UserService {
         return false;
     }
 
-    public void updateUser(String oldUsername, String newUsername, String newFirstName, String newLastName, Date newDateOfBirth) {
-        currentUser.setUsername(newUsername);
-        currentUser.setFirstname(newFirstName);
-        currentUser.setLastname(newLastName);
-        currentUser.setDateOfBirth(newDateOfBirth);
-
-        userDAO.update(currentUser, oldUsername);
-
+    public void updateUser(User user) {
+        userDAO.update(user, user.getUsername());
     }
 
     public boolean deleteUser(String username) {
         if (userDAO.isUsernameExists(username)) {
-            userDAO.deleteUser(username);
+            userDAO.deleteEntity(username);
             return true;
         }
         return false;
     }
 
     public boolean deleteAllUsers() {
-        if (userDAO.containUsers()){
-            userDAO.deleteAllUsers();
+        if (userDAO.containEntities()){
+            userDAO.deleteAllEntities();
             return true;
         }
         return false;
@@ -175,5 +171,26 @@ public class UserService {
             throw new MissingAttributeException("Date of birth is required.");
         }
     }
+
+    public String hashPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
+    // Method to generate a random password of specified length
+    public  String generateRandomPassword(int length) {
+        // Define allowed characters for the password
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+        StringBuilder password = new StringBuilder();
+        Random random = new Random();
+
+        // Generate random characters for the password length
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(characters.length());
+            password.append(characters.charAt(index));
+        }
+
+        return password.toString();
+    }
+
 
 }
